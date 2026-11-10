@@ -102,7 +102,7 @@ let cvPromiseUsed = false;
 function $(id){ return document.getElementById(id); }
 
 function esc(s){
-  return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;','\'':'&#39;'}[c]));
 }
 
 function setStatus(text, isError){
@@ -266,7 +266,7 @@ function printSheet(){
     $('printInfo').textContent = 'El navegador ha bloqueado la ventana. Permite las ventanas emergentes e inténtalo de nuevo.';
     return;
   }
-  w.document.write(`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>${esc(ex.title)}</title><style>@page{size:A4;margin:0}html,body{margin:0;padding:0}svg{display:block;width:210mm;height:297mm}</style></head><body>${sheetSVG(ex)}</body></html>`);
+  w.document.write(`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>${esc(ex.title)}</title><style>@page{size:A4;margin:0}html,body{margin:0;padding:0}svg{display:block;width:210mm;height:297mm}body{background:#fff}</style></head><body>${sheetSVG(ex)}</body></html>`);
   w.document.close();
   setTimeout(() => { w.focus(); w.print(); }, 400);
 }
@@ -352,7 +352,7 @@ function correct(img, ex){
 
   try {
     cv.cvtColor(src, gray, cv.COLOR_RGBA2GRAY);
-    cv.extractChannel(src, red, 0);
+    cv.cvtColor(src, red, cv.COLOR_RGBA2GRAY);
     cv.threshold(gray, bin, 0, 255, cv.THRESH_BINARY_INV + cv.THRESH_OTSU);
     cv.findContours(bin, contours, hier, cv.RETR_LIST, cv.CHAIN_APPROX_SIMPLE);
 
@@ -401,7 +401,7 @@ function correct(img, ex){
     M = cv.getPerspectiveTransform(srcMat, dstMat);
     srcMat.delete(); dstMat.delete();
 
-    // Se endereza el canal rojo: la tinta azul o negra aparece mucho más oscura aquí.
+    // Se endereza el canal de intensidad para detectar la tinta oscura.
     warped = new cv.Mat();
     cv.warpPerspective(red, warped, M, new cv.Size(SW, SH));
 
