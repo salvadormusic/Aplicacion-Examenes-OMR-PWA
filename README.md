@@ -1,5 +1,11 @@
-# Aplicacion-Examenes-OMR-PWA
-Corregir exámenes tipo test (Hasta 20 preguntas)
-De momento seguimos mejorando la aplicación web. Seguro que te puede venir fantástico.
-Grading multiple-choice tests (up to 20 questions)
-We are currently continuing to improve the web application. It’s sure to be really useful for you.
+# Aplicación de Exámenes OMR PWA
+
+## Español
+Aplicación web para corregir exámenes tipo test de hasta 20 preguntas.
+
+El proyecto sigue en desarrollo y mejora continua. ¡Esperamos que te resulte útil!
+
+## English
+A web application for grading multiple-choice exams with up to 20 questions.
+
+The project is under active development and continues to improve. We hope you find it useful!
