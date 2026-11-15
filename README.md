@@ -1,7 +1,8 @@
 # Aplicación de Exámenes OMR PWA
 
-Video de muestra
-https://youtu.be/bWXgWa9rZX4
+Corregir exámenes tipo test de hasta 20 preguntas.
+
+Video de muestra: https://youtu.be/bWXgWa9rZX4
 
 Una aplicación web para corregir exámenes tipo test de hasta 20 preguntas, diseñada para automatizar la evaluación de respuestas en formato de hoja de examen.
 
