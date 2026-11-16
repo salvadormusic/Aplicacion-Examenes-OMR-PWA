@@ -1,0 +1,31 @@
+{
+  "name": "examenes-omr-macos",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Aplicación de exámenes OMR para macOS",
+  "main": "desktop/main.js",
+  "scripts": {
+    "start": "electron .",
+    "dist:mac": "electron-builder --mac dmg"
+  },
+  "devDependencies": {
+    "electron": "34.0.0",
+    "electron-builder": "25.1.8"
+  },
+  "build": {
+    "appId": "com.salvadormusic.examenesomr",
+    "productName": "Exámenes OMR",
+    "files": [
+      "index.html",
+      "desktop/**/*",
+      "package.json"
+    ],
+    "mac": {
+      "category": "public.app-category.education",
+      "target": ["dmg"]
+    },
+    "dmg": {
+      "artifactName": "Examenes-OMR-${version}-${arch}.${ext}"
+    }
+  }
+}
