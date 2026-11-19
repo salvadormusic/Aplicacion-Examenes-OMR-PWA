@@ -8,18 +8,32 @@
 <body>
   <p id="status">Reactivando la aplicación…</p>
   <script>
-    fetch('https://raw.githubusercontent.com/salvadormusic/Aplicacion-Examenes-OMR-PWA/d6e957dc506cd585186402b11efa1f59f28c94ed/index.html')
-      .then(response => {
-        if (!response.ok) throw new Error('No se pudo cargar la aplicación.');
-        return response.text();
-      })
+    const status = document.getElementById('status');
+    const sourceUrl = 'https://raw.githubusercontent.com/salvadormusic/Aplicacion-Examenes-OMR-PWA/d6e957dc506cd585186402b11efa1f59f28c94ed/index.html';
+    const apiUrl = 'https://api.github.com/repos/salvadormusic/Aplicacion-Examenes-OMR-PWA/contents/index.html?ref=d6e957dc506cd585186402b11efa1f59f28c94ed';
+
+    async function loadSource() {
+      try {
+        const response = await fetch(sourceUrl + '?t=' + Date.now(), { cache: 'no-store' });
+        if (!response.ok) throw new Error('No se pudo cargar el archivo original.');
+        return await response.text();
+      } catch (rawError) {
+        const response = await fetch(apiUrl, { cache: 'no-store' });
+        if (!response.ok) throw new Error('No se pudo cargar el archivo original.');
+        const file = await response.json();
+        const bytes = Uint8Array.from(atob(file.content.replace(/\s/g, '')), c => c.charCodeAt(0));
+        return new TextDecoder('utf-8').decode(bytes);
+      }
+    }
+
+    loadSource()
       .then(html => {
         document.open();
         document.write(html);
         document.close();
       })
       .catch(() => {
-        document.getElementById('status').textContent = 'No se pudo reactivar la aplicación. Comprueba tu conexión e inténtalo de nuevo.';
+        status.textContent = 'No se pudo reactivar la aplicación. Comprueba tu conexión e inténtalo de nuevo.';
       });
   </script>
 </body>
