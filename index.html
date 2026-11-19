@@ -10,6 +10,7 @@ body{font-family:Arial,sans-serif;margin:0;min-height:100vh;display:flex;flex-di
 header{background:#2c5d8f;color:#fff;padding:12px;position:sticky;top:0;z-index:5}
 #status{font-size:14px;margin-top:6px;min-height:18px}#status.error{color:#ffb3b3;font-weight:bold}
 nav{display:flex;gap:6px;margin-top:10px}nav button{flex:1;padding:12px 4px;border:0;border-radius:8px;background:#ffffff33;color:#fff;font-size:15px;cursor:pointer}nav button.active{background:#fff;color:#2c5d8f;font-weight:bold}
+.share-actions{display:flex;gap:8px;margin-top:8px;flex-wrap:wrap}.share-actions button{border:1px solid #ffffff99;border-radius:6px;background:#ffffff22;color:#fff;padding:8px 12px;font:inherit;cursor:pointer}.share-actions button:hover{background:#ffffff33}#shareStatus{font-size:13px;min-height:18px;margin-top:4px}
 main{flex:1;width:100%;padding:14px;max-width:728px;margin:0 auto}.screen{display:none}.screen.active{display:block}
 .card{background:#fff;border-radius:10px;padding:14px;margin-bottom:14px;box-shadow:0 1px 3px #0002}
 label.lbl{display:block;margin:8px 0 4px;font-weight:bold}
@@ -27,6 +28,11 @@ footer{flex-shrink:0;padding:16px;color:#555;font-size:14px;text-align:center}
 <body>
 <header>
   <h1 style="margin:0;font-size:20px">Exámenes tipo test</h1>
+  <div class="share-actions">
+    <button type="button" onclick="shareApp()">Compartir</button>
+    <button type="button" onclick="copyAppLink()">Copiar enlace</button>
+  </div>
+  <div id="shareStatus" aria-live="polite"></div>
   <div id="status">Cargando OpenCV…</div>
   <nav>
     <button id="nav-create" class="active" onclick="showScreen('create')">1. Crear</button>
@@ -102,6 +108,9 @@ let cvReady=false,cvPromiseUsed=false;
 function $(id){return document.getElementById(id)}
 function esc(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
 function setStatus(text,isError=false){const st=$('status');st.textContent=text;st.className=isError?'error':'';const m=$('msg');if(m){m.textContent=text;m.style.color=isError?'#b00':'#222';m.style.fontWeight=isError?'bold':'normal'}}
+function setShareStatus(text){$('shareStatus').textContent=text}
+async function copyAppLink(){const url=window.location.href;try{if(navigator.clipboard&&window.isSecureContext){await navigator.clipboard.writeText(url)}else{const field=document.createElement('textarea');field.value=url;field.setAttribute('readonly','');field.style.position='fixed';field.style.opacity='0';document.body.appendChild(field);field.select();const copied=document.execCommand('copy');field.remove();if(!copied)throw new Error('No se pudo copiar el enlace.')}setShareStatus('Enlace copiado.')}catch(error){setShareStatus('No se pudo copiar automáticamente. Copia este enlace: '+url)}}
+async function shareApp(){if(!navigator.share){await copyAppLink();return}try{await navigator.share({title:document.title,text:'Exámenes tipo test',url:window.location.href});setShareStatus('Enlace compartido.')}catch(error){if(error.name!=='AbortError')setShareStatus('No se pudo abrir el menú para compartir. Usa «Copiar enlace».')}}
 function checkCv(){if(cvReady)return true;if(window.cv&&typeof cv.Mat==='function'){cvReady=true;setStatus('OpenCV listo. Ya puedes corregir.')}return cvReady}
 function waitForCv(){let tries=0;const timer=setInterval(()=>{tries++;if(window.cv&&typeof cv.Mat!=='function'&&typeof cv.then==='function'&&!cvPromiseUsed){cvPromiseUsed=true;cv.then(m=>{window.cv=m;checkCv()}).catch(()=>setStatus('No se pudo iniciar OpenCV. Recarga la página.',true))}if(window.cv&&typeof cv.Mat!=='function'&&!cvPromiseUsed)cv.onRuntimeInitialized=()=>checkCv();if(checkCv())clearInterval(timer);else if(tries>150){clearInterval(timer);setStatus('OpenCV no se ha cargado tras 30 segundos. Revisa la conexión a internet y recarga la página.',true)}},200)}
 function loadExams(){let exams=[];try{exams=JSON.parse(localStorage.getItem('examenes'))||[]}catch(e){}if(!Array.isArray(exams))exams=[];if(!exams.length){try{const legacy=JSON.parse(localStorage.getItem('examen'));if(legacy&&legacy.title&&legacy.n&&Array.isArray(legacy.answers)){legacy.id='legacy-'+Date.now();exams=[legacy];localStorage.setItem('examenes',JSON.stringify(exams));if(localStorage.getItem('examenSeleccionado')===null)localStorage.setItem('examenSeleccionado',legacy.id)}}catch(e){}}return exams}
