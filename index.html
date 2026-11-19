@@ -1,134 +1,37 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Exámenes tipo test</title>
-<style>
-*{box-sizing:border-box}
-body{font-family:Arial,sans-serif;margin:0;min-height:100vh;display:flex;flex-direction:column;background:#f4f6f8;color:#222}
-header{background:#2c5d8f;color:#fff;padding:12px;position:sticky;top:0;z-index:5}
-#status{font-size:14px;margin-top:6px;min-height:18px}#status.error{color:#ffb3b3;font-weight:bold}
-nav{display:flex;gap:6px;margin-top:10px}nav button{flex:1;padding:12px 4px;border:0;border-radius:8px;background:#ffffff33;color:#fff;font-size:15px;cursor:pointer}nav button.active{background:#fff;color:#2c5d8f}
-main{flex:1;width:100%;padding:14px;max-width:728px;margin:0 auto}.screen{display:none}.screen.active{display:block}
-.card{background:#fff;border-radius:10px;padding:14px;margin-bottom:14px;box-shadow:0 1px 3px #0002}
-label.lbl{display:block;margin:8px 0 4px;font-weight:bold}
-input[type=text],input[type=number],select{width:100%;padding:12px;font-size:17px;border:1px solid #bbb;border-radius:8px;background:#fff}
-.btn{display:block;width:100%;padding:14px;font-size:17px;border:0;border-radius:8px;background:#2c5d8f;color:#fff;margin-top:10px;text-align:center;cursor:pointer}.btn.secondary{background:#6b7b8c}
-#fileInput{position:absolute;width:1px;height:1px;opacity:0;pointer-events:none}
-.qrow{display:flex;align-items:center;flex-wrap:wrap;gap:8px;padding:6px 0;border-bottom:1px solid #eee}.qrow span.num{width:110px;font-weight:bold}.qrow label{margin:0;font-weight:normal;display:flex;align-items:center;gap:4px}
-.msg{font-size:16px;margin-top:10px;min-height:20px;line-height:1.4}table{width:100%;border-collapse:collapse;margin-top:10px;font-size:16px}th,td{border-bottom:1px solid #ddd;padding:8px;text-align:center}
-#preview svg{width:100%;height:auto;border:1px solid #ccc;background:#fff}#debug{width:100%;height:auto;margin-top:12px;border:1px solid #ccc;display:none}.legend{font-size:14px;color:#555;margin-top:8px}
-footer{flex-shrink:0;padding:16px;color:#555;font-size:14px;text-align:center}
-.share-link{border:0;padding:0;background:none;color:#fff;font:inherit;text-decoration:underline;cursor:pointer;margin-top:8px}
-@media(max-width:480px){nav button{font-size:13px;padding:11px 2px}main{padding:10px}}
-</style>
-<script async src="https://cdn.jsdelivr.net/npm/@techstark/opencv-js@4.10.0-release.1/dist/opencv.js" onerror="setStatus('No se pudo descargar OpenCV. Revisa la conexión a internet y recarga la página.',true)"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Aplicación temporalmente desactivada</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      min-height: 100vh;
+      margin: 0;
+      display: grid;
+      place-items: center;
+      padding: 24px;
+      background: #f4f6f8;
+      color: #222;
+      font-family: Arial, sans-serif;
+      text-align: center;
+    }
+    main {
+      max-width: 520px;
+      padding: 28px;
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 2px 10px #0002;
+    }
+    h1 { margin-top: 0; color: #2c5d8f; }
+  </style>
 </head>
 <body>
-<header>
-  <h1 style="margin:0;font-size:20px">Exámenes tipo test</h1>
-  <div id="status">Cargando OpenCV…</div>
-  <button type="button" class="share-link" onclick="shareApp()">Compartir esta aplicación</button>
-  <nav>
-    <button id="nav-create" class="active" onclick="showScreen('create')">1. Crear</button>
-    <button id="nav-print" onclick="showScreen('print')">2. Imprimir</button>
-    <button id="nav-grade" onclick="showScreen('grade')">3. Corregir</button>
-  </nav>
-</header>
-<main>
-  <section id="create" class="screen active">
-    <div class="card">
-      <label class="lbl" for="createExamSelect">Formularios guardados</label>
-      <select id="createExamSelect" onchange="selectExam(this.value)"><option value="">— Nuevo formulario —</option></select>
-      <button class="btn secondary" onclick="newExam()">Crear un formulario nuevo</button>
-      <label class="lbl" for="title">Título del examen</label>
-      <input type="text" id="title" placeholder="Ej.: Examen Tema 3">
-      <label class="lbl" for="nq">Número de preguntas (1-20)</label>
-      <input type="number" id="nq" min="1" max="20" value="10">
-      <button class="btn secondary" onclick="buildKeyForm()">Generar formulario de respuestas</button>
-    </div>
-    <div class="card">
-      <h3 style="margin-top:0">Respuestas correctas</h3>
-      <div id="keyForm">Pulsa "Generar formulario de respuestas" para empezar.</div>
-      <button class="btn" onclick="saveExam()">Guardar examen</button>
-      <div id="createMsg" class="msg"></div>
-    </div>
-  </section>
-  <section id="print" class="screen">
-    <div class="card">
-      <h3 style="margin-top:0">Hoja de respuestas</h3>
-      <label class="lbl" for="printExamSelect">Formulario que se imprimirá</label>
-      <select id="printExamSelect" onchange="selectExam(this.value)"></select>
-      <div id="printInfo" class="msg"></div>
-      <button class="btn" onclick="printSheet()">Imprimir (A4)</button>
-      <div id="preview" style="margin-top:12px"></div>
-    </div>
-  </section>
-  <section id="grade" class="screen">
-    <div class="card">
-      <h3 style="margin-top:0">Corregir una foto</h3>
-      <label class="lbl" for="gradeExamSelect">Formulario para corregir</label>
-      <select id="gradeExamSelect" onchange="selectExam(this.value)"></select>
-      <button class="btn" onclick="pickFile()">Elegir foto (galería, cámara o archivos)</button>
-      <input type="file" id="fileInput" accept="image/*" onchange="handleFile(event)">
-      <div id="msg" class="msg"></div>
-      <div id="result"></div>
-      <canvas id="debug"></canvas>
-      <div id="legend" class="legend" style="display:none">Verde: burbuja marcada. Gris: burbuja no marcada.</div>
-    </div>
-  </section>
-</main>
-<footer>
-  <p>Created by <a href="https://www.instagram.com/salvador_musiccomposer/" target="_blank" rel="noopener noreferrer">salvador_musiccomposer</a></p>
-  <p>Si esta herramienta te resulta útil, puedes apoyar a estas organizaciones:</p>
-  <p>
-    <a href="https://www.msf.es/colabora/haz-un-donativo"
-       target="_blank"
-       rel="noopener noreferrer">
-      Donar a Médicos Sin Fronteras
-    </a>
-  </p>
-  <p>
-    <a href="https://www.caritas.es/meridabadajoz/que-puedes-hacer-tu/dona/"
-       target="_blank"
-       rel="noopener noreferrer">
-      Donar a Cáritas Mérida-Badajoz
-    </a>
-  </p>
-</footer>
-<script>
-const FID=[[60,60],[940,60],[940,1340],[60,1340]],TOP=300,BOT=1240,COLS=[300,440,580,720],SW=1000,SH=1400,MARK=.25,MAX_PROC=1600;
-const bubbleR=nq=>Math.min(22,((BOT-TOP)/nq)*.35);
-let cvReady=false,cvPromiseUsed=false;
-function $(id){return document.getElementById(id)}
-function esc(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
-function setStatus(text,isError=false){const st=$('status');st.textContent=text;st.className=isError?'error':'';const m=$('msg');if(m){m.textContent=text;m.style.color=isError?'#b00':'#222';m.style.fontWeight=isError?'bold':'normal'}}
-async function shareApp(){const shareData={title:document.title,text:'Exámenes tipo test',url:window.location.href};if(navigator.share){try{await navigator.share(shareData);return}catch(error){if(error.name==='AbortError')return}}if(navigator.clipboard&&navigator.clipboard.writeText){try{await navigator.clipboard.writeText(shareData.url);setStatus('Enlace copiado. Ya puedes compartirlo.');return}catch(error){}}window.prompt('Copia este enlace para compartir la aplicación:',shareData.url)}
-function checkCv(){if(cvReady)return true;if(window.cv&&typeof cv.Mat==='function'){cvReady=true;setStatus('OpenCV listo. Ya puedes corregir.')}return cvReady}
-function waitForCv(){let tries=0;const timer=setInterval(()=>{tries++;if(window.cv&&typeof cv.Mat!=='function'&&typeof cv.then==='function'&&!cvPromiseUsed){cvPromiseUsed=true;cv.then(m=>{window.cv=m;cvReady=true;setStatus('OpenCV listo. Ya puedes corregir.')}).catch(()=>setStatus('No se pudo inicializar OpenCV.',true));clearInterval(timer)}else if(checkCv()){clearInterval(timer)}else if(tries>300){clearInterval(timer);setStatus('OpenCV tarda demasiado en cargar. Recarga la página.',true)}},100)}
-function loadExams(){let exams=[];try{exams=JSON.parse(localStorage.getItem('examenes'))||[]}catch(e){}if(!Array.isArray(exams))exams=[];if(!exams.length){try{const legacy=JSON.parse(localStorage.getItem('examen'))||null;if(legacy&&legacy.title&&legacy.n&&Array.isArray(legacy.key))exams=[{...legacy,id:legacy.id||String(Date.now())}]}catch(e){}}return exams}
-function storeExams(exams){localStorage.setItem('examenes',JSON.stringify(exams))}
-function selectedExamId(){return localStorage.getItem('examenSeleccionado')}
-function getSelectedExam(){const exams=loadExams(),id=selectedExamId();return exams.find(ex=>ex.id===id)||null}
-function refreshExamSelectors(){const exams=loadExams(),selected=selectedExamId()||'',html='<option value="">— Nuevo formulario —</option>'+exams.map(ex=>`<option value="${esc(ex.id)}">${esc(ex.title)}</option>`).join('');['createExamSelect','printExamSelect','gradeExamSelect'].forEach(id=>{$(id).innerHTML=html;$(id).value=selected})}
-function selectExam(id){localStorage.setItem('examenSeleccionado',id||'');refreshExamSelectors();if(id){const ex=getSelectedExam();if(ex){$('title').value=ex.title;$('nq').value=ex.n;buildKeyForm(ex)}}else clearEditor();refreshPrint()}
-function clearEditor(){$('title').value='';$('nq').value='10';$('keyForm').textContent='Pulsa "Generar formulario de respuestas" para empezar.';$('createMsg').textContent=''}
-function newExam(){localStorage.setItem('examenSeleccionado','');refreshExamSelectors();clearEditor();$('title').focus()}
-function showScreen(name){['create','print','grade'].forEach(s=>{$(s).classList.toggle('active',s===name);$('nav-'+s).classList.toggle('active',s===name)});if(name==='print')refreshPrint();if(name==='grade')checkCv()}
-function buildKeyForm(ex=null){const nq=parseInt($('nq').value,10);if(!(nq>=1&&nq<=20)){$('createMsg').textContent='Introduce un número de preguntas entre 1 y 20.';return}const old=ex||getSelectedExam(),oldKey=old&&Array.isArray(old.key)?old.key:[];$('keyForm').innerHTML=Array.from({length:nq},(_,i)=>`<div class="qrow"><span class="num">Pregunta ${i+1}</span>${['A','B','C','D'].map((a,j)=>`<label><input type="radio" name="q${i}" value="${a}" ${oldKey[i]===a?'checked':''}> ${a}</label>`).join('')}</div>`).join('');$('createMsg').textContent=''}
-function loadCreateForm(ex=getSelectedExam()){if(!ex)return;$('title').value=ex.title;$('nq').value=ex.n;buildKeyForm(ex)}
-function saveExam(){const nq=parseInt($('nq').value,10),title=$('title').value.trim();if(!title){$('createMsg').textContent='Escribe un título para el examen.';return}if(!(nq>=1&&nq<=20)){$('createMsg').textContent='Introduce un número de preguntas entre 1 y 20.';return}const key=[];for(let i=0;i<nq;i++){const checked=document.querySelector(`input[name="q${i}"]:checked`);if(!checked){$('createMsg').textContent=`Selecciona la respuesta correcta de la pregunta ${i+1}.`;return}key.push(checked.value)}const exams=loadExams(),id=selectedExamId()||String(Date.now()),ex={id,title,n:nq,key};const index=exams.findIndex(item=>item.id===id);if(index>=0)exams[index]=ex;else exams.push(ex);storeExams(exams);localStorage.setItem('examenSeleccionado',id);refreshExamSelectors();$('createMsg').textContent='Examen guardado correctamente.';refreshPrint()}
-function sheetSVG(ex){const nq=ex.n,rowH=(BOT-TOP)/nq,r=bubbleR(nq);let s=`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${SW} ${SH}"><rect width="${SW}" height="${SH}" fill="#fff"/>`;FID.forEach(([x,y])=>s+=`<rect x="${x-18}" y="${y-18}" width="36" height="36" fill="#000"/>`);s+=`<text x="500" y="130" text-anchor="middle" font-family="Arial" font-size="36" font-weight="bold">${esc(ex.title)}</text>`;for(let i=0;i<nq;i++){const y=TOP+i*rowH+rowH/2;s+=`<text x="160" y="${y+8}" text-anchor="end" font-family="Arial" font-size="24">${i+1}.</text>`;COLS.forEach((x,j)=>{s+=`<circle cx="${x}" cy="${y}" r="${r}" fill="#fff" stroke="#000" stroke-width="3"/><text x="${x}" y="${y+8}" text-anchor="middle" font-family="Arial" font-size="20">${'ABCD'[j]}</text>`})}return s+'</svg>'}
-function refreshPrint(){const ex=getSelectedExam();if(!ex){$('printInfo').textContent='Selecciona o crea un formulario para imprimir.';$('preview').innerHTML='';return}$('printInfo').textContent=`Examen seleccionado: ${ex.title} (${ex.n} preguntas).`;$('preview').innerHTML=sheetSVG(ex)}
-function printSheet(){const ex=getSelectedExam();if(!ex){$('printInfo').textContent='Selecciona un formulario guardado antes de imprimir.';return}const w=window.open('','_blank');if(!w){$('printInfo').textContent='Permite las ventanas emergentes para imprimir.';return}w.document.write(`<html><head><title>${esc(ex.title)}</title><style>@page{size:A4;margin:10mm}body{margin:0}svg{width:100%;height:auto}</style></head><body>${sheetSVG(ex)}<script>window.onload=()=>window.print()<\/script></body></html>`);w.document.close()}
-function pickFile(){const input=$('fileInput');input.value='';input.click()}
-function handleFile(ev){const file=ev.target.files&&ev.target.files[0];$('result').innerHTML='';$('debug').style.display='none';$('legend').style.display='none';const ex=getSelectedExam();if(!ex){setStatus('Selecciona un formulario para corregir.',true);return}if(!file)return;if(!checkCv()){setStatus('OpenCV todavía se está cargando. Espera unos segundos e inténtalo de nuevo.',true);return}const url=URL.createObjectURL(file),img=new Image();img.onload=()=>{try{correct(img,ex)}finally{URL.revokeObjectURL(url)}};img.onerror=()=>{URL.revokeObjectURL(url);setStatus('No se pudo abrir la imagen.',true)};img.src=url}
-function bubbleFill(m,cx,cy,rIn,rRingIn,rRingOut){const pad=Math.ceil(rRingOut)+2,x0=Math.max(0,cx-pad),y0=Math.max(0,cy-pad),x1=Math.min(m.cols,cx+pad),y1=Math.min(m.rows,cy+pad),roi=m.roi(new cv.Rect(x0,y0,x1-x0,y1-y0));let count=0,total=0;for(let y=0;y<roi.rows;y++)for(let x=0;x<roi.cols;x++){const dx=x+x0-cx,dy=y+y0-cy,d=Math.sqrt(dx*dx+dy*dy);if(d>=rRingIn&&d<=rRingOut){total++;if(roi.ucharAt(y,x)<128)count++}}roi.delete();return total?count/total:0}
-function findCornerMarks(bin,W,H){const contours=new cv.MatVector(),hier=new cv.Mat(),candidates=[];cv.findContours(bin,contours,hier,cv.RETR_EXTERNAL,cv.CHAIN_APPROX_SIMPLE);for(let i=0;i<contours.size();i++){const c=contours.get(i),r=cv.boundingRect(c),area=cv.contourArea(c);c.delete();if(area>W*H*.0002&&area<W*H*.02&&r.width>8&&r.height>8)candidates.push({x:r.x+r.width/2,y:r.y+r.height/2,area})}contours.delete();hier.delete();return candidates}
-function correct(img,ex){if(Math.max(img.naturalWidth,img.naturalHeight)<1000){setStatus('La foto tiene poca resolución. Acércate más a la hoja y vuelve a intentarlo.',true);return}const scale=Math.min(1,MAX_PROC/Math.max(img.naturalWidth,img.naturalHeight)),W=Math.round(img.naturalWidth*scale),H=Math.round(img.naturalHeight*scale),src=cv.imread(img),gray=new cv.Mat(),bin=new cv.Mat();cv.resize(src,src,new cv.Size(W,H));cv.cvtColor(src,gray,cv.COLOR_RGBA2GRAY);cv.threshold(gray,bin,0,255,cv.THRESH_BINARY_INV+cv.THRESH_OTSU);const marks=findCornerMarks(bin,W,H);if(marks.length<4){src.delete();gray.delete();bin.delete();setStatus('No se detectaron las cuatro marcas de la hoja. Asegúrate de que aparezca completa en la foto.',true);return}const sorted=marks.sort((a,b)=>a.y-b.y),top=sorted.slice(0,2).sort((a,b)=>a.x-b.x),bottom=sorted.slice(-2).sort((a,b)=>a.x-b.x),srcPts=cv.matFromArray(4,1,cv.CV_32FC2,[top[0].x,top[0].y,top[1].x,top[1].y,bottom[1].x,bottom[1].y,bottom[0].x,bottom[0].y]),dstPts=cv.matFromArray(4,1,cv.CV_32FC2,[FID[0][0],FID[0][1],FID[1][0],FID[1][1],FID[2][0],FID[2][1],FID[3][0],FID[3][1]]),M=cv.getPerspectiveTransform(srcPts,dstPts),warped=new cv.Mat();cv.warpPerspective(gray,warped,M,new cv.Size(SW,SH));cv.threshold(warped,bin,0,255,cv.THRESH_BINARY_INV+cv.THRESH_OTSU);const answers=[],marked=[];for(let i=0;i<ex.n;i++){const y=TOP+(i+.5)*(BOT-TOP)/ex.n,fill=COLS.map(x=>bubbleFill(bin,x,y,bubbleR(ex.n),bubbleR(ex.n)*.45,bubbleR(ex.n)*.9)),max=Math.max(...fill),idx=fill.indexOf(max);answers.push(max>MARK?'ABCD'[idx]:'—');marked.push(fill.map(v=>v>MARK))}let score=0;answers.forEach((a,i)=>{if(a===ex.key[i])score++});$('result').innerHTML=`<h3>Resultado: ${score} / ${ex.n}</h3><table><thead><tr><th>Pregunta</th><th>Marcada</th><th>Correcta</th></tr></thead><tbody>${answers.map((a,i)=>`<tr><td>${i+1}</td><td>${a}</td><td>${ex.key[i]}</td></tr>`).join('')}</tbody></table>`;const debug=$('debug');debug.width=SW;debug.height=SH;cv.imshow(debug,warped);debug.style.display='block';$('legend').style.display='block';setStatus('Corrección completada.');src.delete();gray.delete();bin.delete();srcPts.delete();dstPts.delete();M.delete();warped.delete()}
-function initialize(){const exams=loadExams();if(selectedExamId()===null&&exams.length)localStorage.setItem('examenSeleccionado',exams[0].id);refreshExamSelectors();const ex=getSelectedExam();if(ex)loadCreateForm(ex);waitForCv()}
-initialize();
-</script>
+  <main>
+    <h1>Aplicación temporalmente desactivada</h1>
+    <p>Estamos realizando tareas de mantenimiento.</p>
+    <p>Por favor, vuelve a intentarlo más tarde.</p>
+  </main>
 </body>
 </html>
