@@ -21,6 +21,7 @@ input[type=text],input[type=number],select{width:100%;padding:12px;font-size:17p
 .msg{font-size:16px;margin-top:10px;min-height:20px;line-height:1.4}table{width:100%;border-collapse:collapse;margin-top:10px;font-size:16px}th,td{border-bottom:1px solid #ddd;padding:8px;text-align:center}.score{font-size:28px;font-weight:bold;text-align:center;margin:10px 0}
 #preview svg{width:100%;height:auto;border:1px solid #ccc;background:#fff}#debug{width:100%;height:auto;margin-top:12px;border:1px solid #ccc;display:none}.legend{font-size:14px;color:#555;margin-top:6px}
 footer{flex-shrink:0;padding:16px;color:#555;font-size:14px;text-align:center}
+footer details{margin:0 auto;max-width:420px}footer summary{cursor:pointer;text-decoration:underline;color:#2c5d8f}footer details p{margin:8px 0}
 @media(max-width:480px){nav button{font-size:13px;padding:11px 2px}main{padding:10px}}
 </style>
 <script async src="https://cdn.jsdelivr.net/npm/@techstark/opencv-js@4.10.0-release.1/dist/opencv.js" onerror="setStatus('No se pudo descargar OpenCV. Revisa la conexión a internet y recarga la página.', true)"></script>
@@ -87,19 +88,18 @@ footer{flex-shrink:0;padding:16px;color:#555;font-size:14px;text-align:center}
   <p>Created by <a href="https://www.instagram.com/salvador_musiccomposer/" target="_blank" rel="noopener noreferrer">salvador_musiccomposer</a></p>
   <p>Si esta herramienta te resulta útil, puedes apoyar a estas organizaciones:</p>
   <p>
-    <a href="https://www.msf.es/colabora/haz-un-donativo"
-       target="_blank"
-       rel="noopener noreferrer">
-      Donar a Médicos Sin Fronteras
-    </a>
+    <a href="https://www.msf.es/colabora/haz-un-donativo" target="_blank" rel="noopener noreferrer">Donar a Médicos Sin Fronteras</a>
   </p>
   <p>
-    <a href="https://www.caritas.es/meridabadajoz/que-puedes-hacer-tu/dona/"
-       target="_blank"
-       rel="noopener noreferrer">
-      Donar a Cáritas Mérida-Badajoz
-    </a>
+    <a href="https://www.caritas.es/meridabadajoz/que-puedes-hacer-tu/dona/" target="_blank" rel="noopener noreferrer">Donar a Cáritas Mérida-Badajoz</a>
   </p>
+  <details>
+    <summary>Otras</summary>
+    <p><a href="https://www2.cruzroja.es/colabora/donaciones" target="_blank" rel="noopener noreferrer">Cruz Roja Española</a></p>
+    <p><a href="https://www.savethechildren.es/colabora/dona" target="_blank" rel="noopener noreferrer">Save the Children</a></p>
+    <p><a href="https://www.bancodealimentos.es/donantes/particulares/haz-un-donativo/" target="_blank" rel="noopener noreferrer">Banco de Alimentos</a></p>
+    <p><a href="https://www.fundacionvicenteferrer.org/es/colabora" target="_blank" rel="noopener noreferrer">Fundación Vicente Ferrer</a></p>
+  </details>
 </footer>
 <script>
 const FID=[[60,60],[940,60],[940,1340],[60,1340]],TOP=300,BOT=1240,COLS=[300,440,580,720],SW=1000,SH=1400,MARK=.25,MAX_PROC=1600;
