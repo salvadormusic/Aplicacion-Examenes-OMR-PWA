@@ -3,35 +3,24 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Aplicación temporalmente desactivada</title>
-  <style>
-    * { box-sizing: border-box; }
-    body {
-      min-height: 100vh;
-      margin: 0;
-      display: grid;
-      place-items: center;
-      padding: 24px;
-      background: #f4f6f8;
-      color: #222;
-      font-family: Arial, sans-serif;
-      text-align: center;
-    }
-    main {
-      max-width: 520px;
-      padding: 28px;
-      background: #fff;
-      border-radius: 12px;
-      box-shadow: 0 2px 10px #0002;
-    }
-    h1 { margin-top: 0; color: #2c5d8f; }
-  </style>
+  <title>Exámenes tipo test</title>
 </head>
 <body>
-  <main>
-    <h1>Aplicación temporalmente desactivada</h1>
-    <p>Estamos realizando tareas de mantenimiento.</p>
-    <p>Por favor, vuelve a intentarlo más tarde.</p>
-  </main>
+  <p id="status">Reactivando la aplicación…</p>
+  <script>
+    fetch('https://raw.githubusercontent.com/salvadormusic/Aplicacion-Examenes-OMR-PWA/d6e957dc506cd585186402b11efa1f59f28c94ed/index.html')
+      .then(response => {
+        if (!response.ok) throw new Error('No se pudo cargar la aplicación.');
+        return response.text();
+      })
+      .then(html => {
+        document.open();
+        document.write(html);
+        document.close();
+      })
+      .catch(() => {
+        document.getElementById('status').textContent = 'No se pudo reactivar la aplicación. Comprueba tu conexión e inténtalo de nuevo.';
+      });
+  </script>
 </body>
 </html>
