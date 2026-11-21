@@ -15,7 +15,7 @@ main{flex:1;width:100%;padding:14px;max-width:728px;margin:0 auto}.screen{displa
 .card{background:#fff;border-radius:10px;padding:14px;margin-bottom:14px;box-shadow:0 1px 3px #0002}
 label.lbl{display:block;margin:8px 0 4px;font-weight:bold}
 input[type=text],input[type=number],select{width:100%;padding:12px;font-size:17px;border:1px solid #bbb;border-radius:8px;background:#fff}
-.btn{display:block;width:100%;padding:14px;font-size:17px;border:0;border-radius:8px;background:#2c5d8f;color:#fff;margin-top:10px;text-align:center;cursor:pointer}.btn.secondary{background:#6b7b8c}
+.btn{display:block;width:100%;padding:14px;font-size:17px;border:0;border-radius:8px;background:#2c5d8f;color:#fff;margin-top:10px;text-align:center;cursor:pointer}.btn.secondary{background:#6b7b8c}.btn.danger{background:#b83232}
 #fileInput{position:absolute;width:1px;height:1px;opacity:0;pointer-events:none}
 .qrow{display:flex;align-items:center;flex-wrap:wrap;gap:8px;padding:6px 0;border-bottom:1px solid #eee}.qrow span.num{width:110px;font-weight:bold}.qrow label{margin:0;font-weight:normal;display:flex;align-items:center;gap:3px;padding:6px 8px;border:1px solid #ccc;border-radius:6px}
 .msg{font-size:16px;margin-top:10px;min-height:20px;line-height:1.4}table{width:100%;border-collapse:collapse;margin-top:10px;font-size:16px}th,td{border-bottom:1px solid #ddd;padding:8px;text-align:center}.score{font-size:28px;font-weight:bold;text-align:center;margin:10px 0}
@@ -47,6 +47,7 @@ footer details{margin:0 auto;max-width:420px}footer summary{cursor:pointer;text-
       <label class="lbl" for="createExamSelect">Formularios guardados</label>
       <select id="createExamSelect" onchange="selectExam(this.value)"><option value="">— Nuevo formulario —</option></select>
       <button class="btn secondary" onclick="newExam()">Crear un formulario nuevo</button>
+      <button class="btn danger" id="deleteExamBtn" onclick="deleteSelectedExam()">Borrar formulario seleccionado</button>
       <label class="lbl" for="title">Título del examen</label>
       <input type="text" id="title" placeholder="Ej.: Examen Tema 3">
       <label class="lbl" for="nq">Número de preguntas (1-20)</label>
@@ -87,12 +88,8 @@ footer details{margin:0 auto;max-width:420px}footer summary{cursor:pointer;text-
 <footer>
   <p>Created by <a href="https://www.instagram.com/salvador_musiccomposer/" target="_blank" rel="noopener noreferrer">salvador_musiccomposer</a></p>
   <p>Si esta herramienta te resulta útil, puedes apoyar a estas organizaciones:</p>
-  <p>
-    <a href="https://www.msf.es/colabora/haz-un-donativo" target="_blank" rel="noopener noreferrer">Donar a Médicos Sin Fronteras</a>
-  </p>
-  <p>
-    <a href="https://www.caritas.es/meridabadajoz/que-puedes-hacer-tu/dona/" target="_blank" rel="noopener noreferrer">Donar a Cáritas Mérida-Badajoz</a>
-  </p>
+  <p><a href="https://www.msf.es/colabora/haz-un-donativo" target="_blank" rel="noopener noreferrer">Donar a Médicos Sin Fronteras</a></p>
+  <p><a href="https://www.caritas.es/meridabadajoz/que-puedes-hacer-tu/dona/" target="_blank" rel="noopener noreferrer">Donar a Cáritas Mérida-Badajoz</a></p>
   <details>
     <summary>Otras</summary>
     <p><a href="https://www2.cruzroja.es/colabora/donaciones" target="_blank" rel="noopener noreferrer">Cruz Roja Española</a></p>
@@ -106,7 +103,7 @@ const FID=[[60,60],[940,60],[940,1340],[60,1340]],TOP=300,BOT=1240,COLS=[300,440
 const bubbleR=nq=>Math.min(22,((BOT-TOP)/nq)*.35);
 let cvReady=false,cvPromiseUsed=false;
 function $(id){return document.getElementById(id)}
-function esc(s){return String(s).replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function esc(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
 function setStatus(text,isError=false){const st=$('status');st.textContent=text;st.className=isError?'error':'';const m=$('msg');if(m){m.textContent=text;m.style.color=isError?'#b00':'#222';m.style.fontWeight=isError?'bold':'normal'}}
 function setShareStatus(text){$('shareStatus').textContent=text}
 async function copyAppLink(){const url=window.location.href;try{if(navigator.clipboard&&window.isSecureContext){await navigator.clipboard.writeText(url)}else{const field=document.createElement('textarea');field.value=url;field.setAttribute('readonly','');field.style.position='fixed';field.style.opacity='0';document.body.appendChild(field);field.select();const copied=document.execCommand('copy');field.remove();if(!copied)throw new Error('No se pudo copiar el enlace.')}setShareStatus('Enlace copiado.')}catch(error){setShareStatus('No se pudo copiar automáticamente. Copia este enlace: '+url)}}
@@ -117,7 +114,8 @@ function loadExams(){let exams=[];try{exams=JSON.parse(localStorage.getItem('exa
 function storeExams(exams){localStorage.setItem('examenes',JSON.stringify(exams))}
 function selectedExamId(){return localStorage.getItem('examenSeleccionado')}
 function getSelectedExam(){const exams=loadExams(),id=selectedExamId();return exams.find(ex=>ex.id===id)||null}
-function refreshExamSelectors(){const exams=loadExams(),selected=selectedExamId()||'',html='<option value="">— Nuevo formulario —</option>'+exams.map(ex=>`<option value="${esc(ex.id)}">${esc(ex.title)} (${ex.n} preguntas)</option>`).join('');['createExamSelect','printExamSelect','gradeExamSelect'].forEach(id=>{const el=$(id);if(!el)return;el.innerHTML=html;el.value=selected})}
+function refreshExamSelectors(){const exams=loadExams(),selected=selectedExamId()||'',html='<option value="">— Nuevo formulario —</option>'+exams.map(ex=>`<option value="${esc(ex.id)}">${esc(ex.title)} (${ex.n} preguntas)</option>`).join('');['createExamSelect','printExamSelect','gradeExamSelect'].forEach(id=>{const el=$(id);if(!el)return;el.innerHTML=html;el.value=selected});const deleteBtn=$('deleteExamBtn');if(deleteBtn)deleteBtn.disabled=!getSelectedExam()}
+function deleteSelectedExam(){const ex=getSelectedExam();if(!ex){$('createMsg').textContent='Selecciona primero un formulario guardado.';return}if(!window.confirm(`¿Seguro que quieres borrar el formulario «${ex.title}»? Esta acción no se puede deshacer.`))return;const exams=loadExams().filter(item=>item.id!==ex.id);storeExams(exams);localStorage.setItem('examenSeleccionado','');refreshExamSelectors();clearEditor();refreshPrint();$('createMsg').textContent='Formulario eliminado.'}
 function selectExam(id){localStorage.setItem('examenSeleccionado',id||'');refreshExamSelectors();if(id){const ex=getSelectedExam();if(ex){$('title').value=ex.title;$('nq').value=ex.n;buildKeyForm(ex)}}else{clearEditor()}refreshPrint()}
 function clearEditor(){$('title').value='';$('nq').value='10';$('keyForm').textContent='Pulsa "Generar formulario de respuestas" para empezar.';$('createMsg').textContent=''}
 function newExam(){localStorage.setItem('examenSeleccionado','');refreshExamSelectors();clearEditor();$('title').focus()}
