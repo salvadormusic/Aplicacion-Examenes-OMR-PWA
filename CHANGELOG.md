@@ -2,6 +2,15 @@
 
 Este archivo registra los cambios importantes de cada versión. Las entradas documentan las versiones del proyecto; una entrada en este archivo no significa por sí sola que exista una etiqueta (tag) o una Release publicada en GitHub.
 
+## [1.2.2] - 2026-11-24
+
+### Añadido
+- Enlaces para donaciones.
+- Botones de enlace a plantillas de test.
+
+### Corregido
+- Corrección de errores en la cabecera y el pie de página.
+
 ## [1.2.0] - 2026-11-18
 
 ### Añadido
