@@ -16,6 +16,9 @@
     .share-actions { display: flex; gap: 8px; margin-top: 8px; flex-wrap:wrap }
     .share-actions button { border: 1px solid #ffffff99; border-radius: 6px; background: #ffffff22; color: #fff; padding: 8px 12px; font: inherit; cursor:pointer }
     .share-actions button:hover { background:#ffffff33 }
+    .header-links { display: flex; gap: 8px; margin-top: 8px; flex-wrap: wrap }
+    .header-links a { display: inline-block; border: 1px solid #ffffff99; border-radius: 6px; background: #ffffff22; color: #fff; padding: 8px 12px; font: inherit; text-decoration: none }
+    .header-links a:hover { background: #ffffff33 }
     #shareStatus { font-size: 13px; min-height: 18px; margin-top: 4px }
     main { flex: 1; width: 100%; padding: 14px; max-width: 728px; margin:0 auto }
     .screen { display:none }
@@ -136,7 +139,7 @@
     const bubbleR = nq => Math.min(22, ((BOT-TOP)/nq)*.35);
     let cvReady = false, cvPromiseUsed = false;
     function $(id) { return document.getElementById(id) }
-    function esc(s) { return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":"&#39;"}[c])) }
+    function esc(s) { return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])) }
     function setStatus(text, isError=false) { const st=$('status'); st.textContent=text; st.className=isError?'error':''; const m=$('msg'); if(m){m.textContent=text;m.style.color=isError?'#b00':'#222';m.style.fontWeight=isError?'bold':'normal'} }
     function setShareStatus(text) { $('shareStatus').textContent=text }
     async function copyAppLink() { const url=window.location.href; try { if(navigator.clipboard && window.isSecureContext){await navigator.clipboard.writeText(url)}else{const field=document.createElement('textarea');field.value=url;field.setAttribute('readonly','');field.style.position='fixed';field.style.opacity='0';document.body.appendChild(field);field.select();const copied=document.execCommand('copy');field.remove();if(!copied)throw new Error('No se pudo copiar el enlace.')} setShareStatus('Enlace copiado.') }catch(error){setShareStatus('No se pudo copiar automáticamente. Copia este enlace: '+url)} }
